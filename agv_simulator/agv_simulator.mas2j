@@ -1,0 +1,20 @@
+MAS agv_simulator {
+
+	infrastructure: Jade
+
+	environment: HospitalEnv (gui)
+
+	agents:
+		ia;
+		otc;
+		zc;
+		jtd;
+		oa;
+		gp;
+		lift;
+		agv1 agv;
+		stake1 stake;
+
+	aslSourcePath:
+		"src/asl";
+}
