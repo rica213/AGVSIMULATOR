@@ -1,6 +1,6 @@
 MAS agv_simulator {
 
-	infrastructure: Jade
+	infrastructure: Centralised
 
 	environment: HospitalEnv (gui)
 
