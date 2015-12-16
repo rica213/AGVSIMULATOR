@@ -4,8 +4,9 @@
 
 /* Initial goals */
 
-!start.
-
 /* Plans */
-
-+!start : true <- .print("hello world.").
++available(AGV_call)[source(A)]: true 
+	<-.print("receive from ",A," : call for available AGV");
+	.send(A, askOne,ready(Pickup_location)).
+	
++ready(_)[source(A)]:true<- .print("...computing the nearest agv...").

@@ -9,14 +9,15 @@ import jason.environment.grid.Location;
 import java.util.logging.*;
 
 public class Hospital extends Environment {
-	
+
 	HospitalModel model;
 	HospitalView view;
-	
+
 	int sleep = 0;
 
 	// common literals
-	public static final Literal inCartPickUp = Literal.parseLiteral("in(cart, cart_pickup)");
+	public static final Literal inCartPickUp = Literal
+			.parseLiteral("in(cart, cart_pickup)");
 	public static final Literal pickupLocation = Literal
 			.parseLiteral("ready(pickup_location)");
 
@@ -32,8 +33,6 @@ public class Hospital extends Environment {
 
 	static Logger logger = Logger.getLogger(Hospital.class.getName());
 
-
-
 	@Override
 	public void init(String[] args) {
 		model = Renderer.renderer();
@@ -43,11 +42,10 @@ public class Hospital extends Environment {
 			model.setView(view);
 		}
 
-		//updatePercepts();
+		// updatePercepts();
 		updateAgsPercept();
 	}
 
-	
 	private void updateAgsPercept() {
 		for (int i = 0; i < model.getNbOfAgs(); i++) {
 			updateAgPercept(i);
@@ -55,7 +53,7 @@ public class Hospital extends Environment {
 	}
 
 	private void updateAgPercept(int ag) {
-		updateAgPercept("miner" + (ag + 1), ag);
+		updateAgPercept("agv" + (ag + 1), ag);
 	}
 
 	private void updateAgPercept(String agName, int ag) {
@@ -64,9 +62,9 @@ public class Hospital extends Environment {
 		Location l = model.getAgPos(ag);
 		addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
 
-		//if (model.carryingCart(ag)) {
-		//	addPercept(agName, Literal.parseLiteral("carrying_gold"));
-	//	}
+		 if (model.carryingCart) {
+		 addPercept(agName, Literal.parseLiteral("hasState("+agName+", busy)"));
+		 }
 
 		// what's around
 		updateAgPercept(agName, l.x - 1, l.y - 1);
@@ -86,31 +84,30 @@ public class Hospital extends Environment {
 		if (model.hasObject(HospitalModel.OBSTACLE, x, y)) {
 			addPercept(agName,
 					Literal.parseLiteral("cell(" + x + "," + y + ",obstacle)"));
-		} else if (model.hasObject(HospitalModel.AGENT, x, y)) {
+		} else {
+			if (model.hasObject(HospitalModel.CART, x, y)) {
+				Literal.parseLiteral("in(cart," + x + "," + y + ")");
+			}
+			if (model.hasObject(HospitalModel.AGENT, x, y)) {
 				addPercept(agName,
 						Literal.parseLiteral("cell(" + x + "," + y + ",agv)"));
 			}
-		}
-	
-	
-	/** creates the agents percepts based on the HouseModel 
-	void updatePercepts() {
-		// clear the percepts of the agents
-		clearPercepts();
 
-		//addPercept(Literal.parseLiteral("percept(demo)"));
-		// get the agv location
-		Location locAGV_1 = model.getAgPos(0);
-
-		// add agent location to its percepts
-		if (locAGV_1.equals(HospitalModel.lPickUp1)) {
-			addPercept("samePosition(agv_location, pickup_location)");
-		}
-		if (locAGV_1.equals(HospitalModel.lDest)) {
-			addPercept(atDestination);
 		}
 	}
-*/
+
+	/**
+	 * creates the agents percepts based on the HouseModel void updatePercepts()
+	 * { // clear the percepts of the agents clearPercepts();
+	 * 
+	 * //addPercept(Literal.parseLiteral("percept(demo)")); // get the agv
+	 * location Location locAGV_1 = model.getAgPos(0);
+	 * 
+	 * // add agent location to its percepts if
+	 * (locAGV_1.equals(HospitalModel.lPickUp1)) {
+	 * addPercept("samePosition(agv_location, pickup_location)"); } if
+	 * (locAGV_1.equals(HospitalModel.lDest)) { addPercept(atDestination); } }
+	 */
 	@Override
 	public boolean executeAction(String ag, Structure action) {
 		try {
@@ -127,7 +124,11 @@ public class Hospital extends Environment {
 				addPercept(agvFree);
 				result = model.takeoffCart();
 
-			} else if (action.getFunctor().equals("move_towards")) {
+			} else if (action.getFunctor().equals("read")) {
+				
+			}
+			
+			else if (action.getFunctor().equals("move_towards")) {
 				addPercept(agvReserved);
 				String l = action.getTerm(0).toString();
 				Location dest = null;

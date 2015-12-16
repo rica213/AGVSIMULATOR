@@ -26,35 +26,42 @@ public class HospitalView extends GridWorldView {
 		setVisible(true);
 		repaint();
 	}
-	
+
 	/**
 	 * */
 	Hospital env = null;
 
-	 @Override
-	    public void initComponents(int width) {
-	        super.initComponents(AREA_WIDTH);
-       
+	@Override
+	public void initComponents(int width) {
+		super.initComponents(AREA_WIDTH);
 
-	        // Events handling
+		// Events handling
+		final HospitalModel hm = (HospitalModel) model;
+		getCanvas().addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				int col = e.getX() / cellSizeW;
+				int lin = e.getY() / cellSizeH;
+				if (col >= 0 && lin >= 0 && col < getModel().getWidth()
+						&& lin < getModel().getHeight()) {
+					hm.add(HospitalModel.CART, col, lin);
+					update(col, lin);
+				}
+			}
 
-	        getCanvas().addMouseListener(new MouseListener() {
-	            public void mouseClicked(MouseEvent e) {
-	                int col = e.getX() / cellSizeW;
-	                int lin = e.getY() / cellSizeH;
-	            //    if (col >= 0 && lin >= 0 && col < getModel().getWidth() && lin < getModel().getHeight()) {
-	                    HospitalModel hm = (HospitalModel)model;
-	                    hm.add(HospitalModel.CART, col, lin);
-	                    update(col, lin);
-	             //   }
-	            }
-	            public void mouseExited(MouseEvent e) {}
-	            public void mouseEntered(MouseEvent e) {}
-	            public void mousePressed(MouseEvent e) {}
-	            public void mouseReleased(MouseEvent e) {}
-	        });
-	    }
-    
+			public void mouseExited(MouseEvent e) {
+			}
+
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
+	}
+
 	/** draw application objects */
 	@Override
 	public void draw(Graphics g, int x, int y, int object) {
@@ -74,7 +81,7 @@ public class HospitalView extends GridWorldView {
 			break;
 		case HospitalModel.PARKING:
 			drawParking(g, x, y);
-			break;		
+			break;
 		case HospitalModel.CART:
 			drawCart(g, x, y);
 			break;
@@ -93,7 +100,7 @@ public class HospitalView extends GridWorldView {
 			if (hmodel.carryingCart)
 				c = Color.orange;
 			super.drawAgent(g, x, y, c, -1);
-			//ImageComponent.paint(getGraphics(), x, y, this);
+			// ImageComponent.paint(getGraphics(), x, y, this);
 			g.setColor(Color.WHITE);
 			super.drawString(g, x, y, defaultFont, "");
 		}
@@ -109,11 +116,11 @@ public class HospitalView extends GridWorldView {
 				- 2, (y + 1) * cellSizeH - 2);
 		g.drawLine(x * cellSizeW + 2, (y + 1) * cellSizeH - 2, (x + 1)
 				* cellSizeW - 2, y * cellSizeH + 2);
-		/*try {
-			g.drawImage(ImageIO.read(new File(getClass().getResource("forklift2.png").getFile())), x, y, this);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} */
+		/*
+		 * try { g.drawImage(ImageIO.read(new
+		 * File(getClass().getResource("forklift2.png").getFile())), x, y,
+		 * this); } catch (IOException e) { e.printStackTrace(); }
+		 */
 	}
 
 	public void drawPickUpSpur(Graphics g, int x, int y) {
@@ -129,20 +136,21 @@ public class HospitalView extends GridWorldView {
 		g.setColor(Color.black);
 		drawString(g, x, y, defaultFont, "P");
 	}
-	
-    public void drawCart(Graphics g, int x, int y) {
-        g.setColor(Color.ORANGE);
-        g.drawRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4, cellSizeH - 4);
-        int[] vx = new int[4];
-        int[] vy = new int[4];
-        vx[0] = x * cellSizeW + (cellSizeW / 2);
-        vy[0] = y * cellSizeH;
-        vx[1] = (x + 1) * cellSizeW;
-        vy[1] = y * cellSizeH + (cellSizeH / 2);
-        vx[2] = x * cellSizeW + (cellSizeW / 2);
-        vy[2] = (y + 1) * cellSizeH;
-        vx[3] = x * cellSizeW;
-        vy[3] = y * cellSizeH + (cellSizeH / 2);
-        g.fillPolygon(vx, vy, 4);
-    }
+
+	public void drawCart(Graphics g, int x, int y) {
+		g.setColor(Color.ORANGE);
+		g.drawRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4,
+				cellSizeH - 4);
+		int[] vx = new int[4];
+		int[] vy = new int[4];
+		vx[0] = x * cellSizeW + (cellSizeW / 2);
+		vy[0] = y * cellSizeH;
+		vx[1] = (x + 1) * cellSizeW;
+		vy[1] = y * cellSizeH + (cellSizeH / 2);
+		vx[2] = x * cellSizeW + (cellSizeW / 2);
+		vy[2] = (y + 1) * cellSizeH;
+		vx[3] = x * cellSizeW;
+		vy[3] = y * cellSizeH + (cellSizeH / 2);
+		g.fillPolygon(vx, vy, 4);
+	}
 }

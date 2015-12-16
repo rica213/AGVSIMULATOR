@@ -1,11 +1,11 @@
 // Agent dc10s in project agvsimulator
 
 /* Initial beliefs and rules */
-
+hasState(agv, running).
+hasState(agv, free).
+!blabla.
 /* Initial goals */
 
-!start.
-
++!blabla:true<-.print("hello").
 /* Plans */
 
-+!start : true <- .print("hello world.").
