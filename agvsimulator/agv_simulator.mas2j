@@ -1,0 +1,15 @@
+MAS agv_simulator {
+
+	infrastructure: Centralised
+
+	environment: agv.Hospital (gui,250)
+
+	agents:
+		cart_sensor;
+		decision_agent;
+		dc20l #2;
+		dc10s #2;
+
+	aslSourcePath:
+		"src/asl";
+}
