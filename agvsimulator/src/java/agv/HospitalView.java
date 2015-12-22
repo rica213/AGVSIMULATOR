@@ -29,7 +29,7 @@ public class HospitalView extends GridWorldView {
 
 	/**
 	 * */
-	Hospital env = null;
+	Environnement env = null;
 
 	@Override
 	public void initComponents(int width) {

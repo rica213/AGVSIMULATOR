@@ -8,7 +8,7 @@ import jason.environment.grid.Location;
 
 import java.util.logging.*;
 
-public class Hospital extends Environment {
+public class Environnement extends Environment {
 
 	HospitalModel model;
 	HospitalView view;
@@ -31,7 +31,7 @@ public class Hospital extends Environment {
 	public static final Literal atDestination = Literal
 			.parseLiteral("samePosition(agv_location, destination_location)");
 
-	static Logger logger = Logger.getLogger(Hospital.class.getName());
+	static Logger logger = Logger.getLogger(Environnement.class.getName());
 
 	@Override
 	public void init(String[] args) {
@@ -53,7 +53,10 @@ public class Hospital extends Environment {
 	}
 
 	private void updateAgPercept(int ag) {
+		//(Integer.parseInt(agName.substring(5))) - 1
 		updateAgPercept("agv" + (ag + 1), ag);
+		
+		//updateAgPercept("dc20l" + (ag + 1), ag);
 	}
 
 	private void updateAgPercept(String agName, int ag) {
@@ -62,9 +65,17 @@ public class Hospital extends Environment {
 		Location l = model.getAgPos(ag);
 		addPercept(agName, Literal.parseLiteral("pos(" + l.x + "," + l.y + ")"));
 
-		 if (model.carryingCart) {
-		 addPercept(agName, Literal.parseLiteral("hasState("+agName+", busy)"));
-		 }
+		if(ag==0 || ag==1) {
+			addPercept(agName,
+					Literal.parseLiteral("type(dc10s)"));
+		}else 		if(ag==2 || ag==3) {
+			addPercept(agName,
+					Literal.parseLiteral("type(dc20l)"));
+		}
+		if (model.carryingCart) {
+			addPercept(agName,
+					Literal.parseLiteral("hasState(" + agName + ", busy)"));
+		}
 
 		// what's around
 		updateAgPercept(agName, l.x - 1, l.y - 1);
@@ -125,9 +136,18 @@ public class Hospital extends Environment {
 				result = model.takeoffCart();
 
 			} else if (action.getFunctor().equals("read")) {
-				
+				String l = action.getTerm(0).toString();
+				if (l.equals("pickup_location")) {
+					logger.info("return the pickup location");
+					addPercept(ag,Literal.parseLiteral("ready(pickup_location)"));
+					result=true;
+				} else if (l.equals("destination_location")) {
+					logger.info("return the destination location");
+					addPercept(ag,Literal.parseLiteral("ready(destination_location)"));
+					result=true;
+				}
 			}
-			
+
 			else if (action.getFunctor().equals("move_towards")) {
 				addPercept(agvReserved);
 				String l = action.getTerm(0).toString();

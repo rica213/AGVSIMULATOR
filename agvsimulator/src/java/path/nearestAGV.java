@@ -1,6 +1,6 @@
 // Internal action code for project agvsimulator
 
-package math;
+package path;
 
 import jason.asSemantics.DefaultInternalAction;
 import jason.asSemantics.TransitionSystem;
@@ -20,7 +20,7 @@ public class nearestAGV extends DefaultInternalAction {
             int n2 = (int)((NumberTerm)args[1]).solve();
             return Math.abs(n1 - n2);
         } catch (Exception e) {
-            logger.warning("Error in function 'math.distance'! "+e);
+            logger.warning("Error in function 'path.distance'! "+e);
         }
         return 0;
     }
@@ -31,7 +31,7 @@ public class nearestAGV extends DefaultInternalAction {
 	 @Override public Object execute(TransitionSystem ts, Unifier un, Term[]
 	 *           args) throws Exception { // execute the internal action
 	 *           ts.getAg().getLogger().info(
-	 *           "executing internal action 'math.FindShortestPath'"); if (true)
+	 *           "executing internal action 'path.FindShortestPath'"); if (true)
 	 *           { // just to show how to throw another kind of exception throw
 	 *           new JasonException("not implemented!"); }
 	 * 
