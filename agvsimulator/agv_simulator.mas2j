@@ -2,15 +2,13 @@ MAS agv_simulator {
 
 	infrastructure: Centralised
 
-	environment: agv.Environnement (nogui,50) //"nogui/gui" to make the view (non)visible 
+	environment: agv.Environnement (gui,250) //"nogui/gui" to make the view (non)visible 
 	
-
 	agents:
+		agv [verbose=0] #4;
 		cart_sensor;
 		decision_agent;
-		agv [verbose=0] #4;
 
 	aslSourcePath:
 		"src/asl";
 }
-	

@@ -8,9 +8,9 @@ import java.util.List;
 import agv.HospitalModel;
 
 public class CreatePath {
-	private List<Vertex> nodes;
-	private List<Edge> edges;
-
+	private static List<Vertex> nodes;
+	private static List<Edge> edges;
+	public static Graph g = new Graph(nodes,edges);
 	public CreatePath() {
 		nodes = new ArrayList<Vertex>();
 		edges = new ArrayList<Edge>();

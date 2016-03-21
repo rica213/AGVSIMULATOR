@@ -35,4 +35,5 @@
 	<-.print(A," : ",type(T)).
 	
 +!selectNearestAvailableAGV:available(AGV_call)& hasState(A,free)
-	<-.print("**Select the nearest available AGV**").
+	<-.print("**Select the nearest available AGV**");
+	path.nearestAGV.

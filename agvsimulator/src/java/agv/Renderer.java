@@ -3,15 +3,15 @@ package agv;
 import jason.environment.grid.GridWorldModel;
 
 public class Renderer {
-
+//public static HospitalModel model;
 	static HospitalModel renderer() {
 		HospitalModel model = HospitalModel.create(HospitalModel.GSize,
 				HospitalModel.GSize, 4);
 		// initial position of agvs
-		model.setAgPos(0, 7, HospitalModel.GSize / 4);
-		model.setAgPos(1, HospitalModel.GSize/2 +1, HospitalModel.GSize / 2 +1);
-		model.setAgPos(2, HospitalModel.GSize - 5, HospitalModel.GSize / 4 +2);
-		model.setAgPos(3, HospitalModel.GSize-5, HospitalModel.GSize - 4);
+		model.setAgPos(0, HospitalModel.lParkingn4);
+		model.setAgPos(1, HospitalModel.lParkingn3);
+		model.setAgPos(2, HospitalModel.lParkingn2);
+		model.setAgPos(3, HospitalModel.lParkingn1);
 		
 		// initial location of pickup spur, parking and storage
 		model.add(HospitalModel.PICKUP, HospitalModel.lPickUp1);

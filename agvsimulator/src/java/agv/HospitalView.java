@@ -6,45 +6,75 @@ import jason.environment.grid.Location;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /** class that implements the View of AGV Simulator application */
 public class HospitalView extends GridWorldView {
-
-	/**
-	 * 
-	 */
+	static Logger logger = Logger.getLogger("Hospital Environment");
 	private static final long serialVersionUID = 6904075546215382571L;
-	HospitalModel hmodel;
+	// HospitalModel hmodel;
 	static final int AREA_WIDTH = 1024;
 
+	/**
+	 * constructor
+	 * */
 	public HospitalView(HospitalModel model) {
 		super(model, "AGV Simulator", AREA_WIDTH);
-		hmodel = model;
+		// hmodel = model;
 		defaultFont = new Font("Arial", Font.BOLD, 16); // change default font
 		setVisible(true);
 		repaint();
 	}
 
 	/**
-	 * */
+	 * 
+	 */
+	Random rand = new Random();
 	Environnement env = null;
+	public static Location location;
+	public static int weight;
+	public static boolean hasCart;                                                                        
+	
+	public static boolean isHasCart() {
+		return hasCart;
+	}
 
 	@Override
 	public void initComponents(int width) {
-		super.initComponents(AREA_WIDTH);
+		super.initComponents(width);
 
 		// Events handling
-		final HospitalModel hm = (HospitalModel) model;
 		getCanvas().addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
+
 				int col = e.getX() / cellSizeW;
 				int lin = e.getY() / cellSizeH;
-				if (col >= 0 && lin >= 0 && col < getModel().getWidth()
-						&& lin < getModel().getHeight()) {
-					hm.add(HospitalModel.CART, col, lin);
+				location = new Location(col, lin);
+				if (location.equals(HospitalModel.lPickUp1)
+						|| location.equals(HospitalModel.lPickUp2)
+						|| location.equals(HospitalModel.lPickUp3)
+						|| location.equals(HospitalModel.lPickUp4)
+						|| location.equals(HospitalModel.lPickUp5)
+						|| location.equals(HospitalModel.lPickUp6)
+						|| location.equals(HospitalModel.lPickUp7)
+						|| location.equals(HospitalModel.lPickUp8)
+						|| location.equals(HospitalModel.lPickUp9)
+						|| location.equals(HospitalModel.lPickUp10)
+						|| location.equals(HospitalModel.lPickUp11)
+						|| location.equals(HospitalModel.lPickUp12)) {
+
+					HospitalModel hm = (HospitalModel) model;
 					update(col, lin);
+					hm.add(HospitalModel.CART, col, lin);
+					hasCart = true;
+					// logger.info("Cart location : "+col +" ,"+lin);
+					weight = rand.nextInt(7000) + 1;
+				} else {
+					logger.info("Put the cart on the pickup cart");
 				}
 			}
 
@@ -65,7 +95,7 @@ public class HospitalView extends GridWorldView {
 	/** draw application objects */
 	@Override
 	public void draw(Graphics g, int x, int y, int object) {
-		Location lAGV = hmodel.getAgPos(0);
+		Location lAGV = model.getAgPos(0);
 		super.drawAgent(g, x, y, Color.lightGray, -1);
 		switch (object) {
 		case HospitalModel.PICKUP:
@@ -92,17 +122,17 @@ public class HospitalView extends GridWorldView {
 
 	@Override
 	public void drawAgent(Graphics g, int x, int y, Color c, int id) {
-		Location lAGV = hmodel.getAgPos(0);
+		Location lAGV = model.getAgPos(0);
 		if (!lAGV.equals(HospitalModel.lDest)
 				&& !lAGV.equals(HospitalModel.lPickUp1)) {
 			c = Color.red;
 
-			if (hmodel.carryingCart)
-				c = Color.orange;
+			// if (model.carryingCart)
+			// c = Color.orange;
 			super.drawAgent(g, x, y, c, -1);
 			// ImageComponent.paint(getGraphics(), x, y, this);
 			g.setColor(Color.WHITE);
-			super.drawString(g, x, y, defaultFont, "");
+			super.drawString(g, x, y, defaultFont, "" + (id + 1));
 		}
 	}
 
@@ -123,10 +153,17 @@ public class HospitalView extends GridWorldView {
 		 */
 	}
 
+	/**
+	 * 
+	 * @param g
+	 * @param x
+	 * @param y
+	 */
+
 	public void drawPickUpSpur(Graphics g, int x, int y) {
+		// g.setColor(Color.GREEN);
+		// g.fillRect(x * cellSizeW, y * cellSizeH, cellSizeW, cellSizeH);
 		g.setColor(Color.GREEN);
-		g.fillRect(x * cellSizeW, y * cellSizeH, cellSizeW, cellSizeH);
-		g.setColor(Color.WHITE);
 		g.drawRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4,
 				cellSizeH - 4);
 		g.drawLine(x * cellSizeW + 2, y * cellSizeH + 2, (x + 1) * cellSizeW
@@ -139,18 +176,6 @@ public class HospitalView extends GridWorldView {
 
 	public void drawCart(Graphics g, int x, int y) {
 		g.setColor(Color.ORANGE);
-		g.drawRect(x * cellSizeW + 2, y * cellSizeH + 2, cellSizeW - 4,
-				cellSizeH - 4);
-		int[] vx = new int[4];
-		int[] vy = new int[4];
-		vx[0] = x * cellSizeW + (cellSizeW / 2);
-		vy[0] = y * cellSizeH;
-		vx[1] = (x + 1) * cellSizeW;
-		vy[1] = y * cellSizeH + (cellSizeH / 2);
-		vx[2] = x * cellSizeW + (cellSizeW / 2);
-		vy[2] = (y + 1) * cellSizeH;
-		vx[3] = x * cellSizeW;
-		vy[3] = y * cellSizeH + (cellSizeH / 2);
-		g.fillPolygon(vx, vy, 4);
+		g.fillRect(x * cellSizeW, y * cellSizeH, cellSizeW, cellSizeH);
 	}
 }

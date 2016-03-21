@@ -1,4 +1,9 @@
-// Agent cart_sensor in project agvsimulator
+/* Agent cart_sensor in project agvsimulator
+ * Capabilities :
+ * *detect cart, 
+ * *read the RFID tag information,
+ * *deliver the calls for AGV
+ */
 
 /* Initial beliefs and rules */
 in(cart,_,_).
